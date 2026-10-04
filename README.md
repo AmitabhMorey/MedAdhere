@@ -5,11 +5,6 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red.svg)](https://streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-**Application Name:** MedAdhere AI  
-**Academic Level:** B.Tech Computer Science & Engineering Machine Learning Case Study  
-**Domain:** Healthcare Predictive Analytics & Clinical Decision Support Systems (CDSS)
-
----
 
 ## 📌 Executive Overview
 
