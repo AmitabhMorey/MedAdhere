@@ -1,0 +1,23 @@
+# Python Bytecode and Caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter Checkpoints & Scratch
+.ipynb_checkpoints/
+scratch/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Streamlit Local Configuration
+.streamlit/

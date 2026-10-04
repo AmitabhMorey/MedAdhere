@@ -1,0 +1,74 @@
+{
+    "project_title": "Medication Adherence Analysis: Predicting Patient Medication Compliance Using Machine Learning",
+    "application_name": "MedAdhere AI",
+    "version": "1.0.0",
+    "model_name": "Random Forest Classifier (Tuned)",
+    "target": "Medication_Adherence",
+    "classification_type": "binary",
+    "classes": {
+        "0": "Non-Adherent",
+        "1": "Adherent"
+    },
+    "random_state": 42,
+    "training_samples": 2400,
+    "test_samples": 600,
+    "features": {
+        "numerical": [
+            "Age",
+            "Medication_Frequency",
+            "Number_of_Medications",
+            "Treatment_Duration_Months",
+            "Previous_Missed_Doses",
+            "Forgetfulness_Score",
+            "Routine_Consistency",
+            "Treatment_Satisfaction",
+            "Distance_to_Pharmacy_Km",
+            "Doctor_Communication",
+            "Medication_Burden_Index",
+            "High_Missed_Doses_Flag",
+            "Polypharmacy_Flag"
+        ],
+        "categorical": [
+            "Gender",
+            "Education_Level",
+            "Employment_Status",
+            "Medication_Type",
+            "Dosage_Complexity",
+            "Medication_Reminder_Usage",
+            "Chronic_Condition",
+            "Side_Effects",
+            "Perceived_Effectiveness",
+            "Medication_Cost_Burden",
+            "Access_to_Pharmacy",
+            "Insurance_Coverage",
+            "Family_Support",
+            "Healthcare_Followup",
+            "Age_Group"
+        ]
+    },
+    "metrics": {
+        "accuracy": 0.835,
+        "precision": 0.834,
+        "recall": 0.9492,
+        "f1_score": 0.8879,
+        "roc_auc": 0.9046
+    },
+    "risk_thresholds": {
+        "low_risk": "Adherence Probability >= 0.70",
+        "moderate_risk": "Adherence Probability 0.40 - 0.69",
+        "high_risk": "Adherence Probability < 0.40"
+    },
+    "top_features": [
+        "Previous_Missed_Doses",
+        "High_Missed_Doses_Flag",
+        "Treatment_Satisfaction",
+        "Medication_Burden_Index",
+        "Forgetfulness_Score",
+        "Perceived_Effectiveness_Low",
+        "Medication_Reminder_Usage_Yes",
+        "Routine_Consistency",
+        "Medication_Reminder_Usage_No",
+        "Distance_to_Pharmacy_Km"
+    ],
+    "academic_disclaimer": "This system is an educational and analytical machine-learning prototype designed for research and academic demonstration. It is NOT a clinical diagnostic tool and must not be used to alter medication regimens or guide clinical treatment decisions."
+}

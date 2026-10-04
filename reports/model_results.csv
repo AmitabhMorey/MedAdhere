@@ -1,0 +1,6 @@
+Model,Accuracy,Precision,Recall (Adherent),Recall (Non-Adherent),F1-Score,ROC-AUC
+Dummy Baseline,0.6883,0.6883,1.0,0.0,0.8154,0.5
+Logistic Regression,0.8717,0.8889,0.9298,0.7433,0.9089,0.9409
+Decision Tree,0.7883,0.8056,0.9128,0.5134,0.8558,0.8102
+Random Forest,0.83,0.8274,0.9516,0.5615,0.8851,0.9024
+Gradient Boosting,0.8533,0.8571,0.9443,0.6524,0.8986,0.9216
