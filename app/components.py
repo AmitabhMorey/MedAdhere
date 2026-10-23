@@ -5,11 +5,18 @@ Contains modular UI widgets, KPI cards, Plotly charts,
 and demographic / clinical preset demo profiles.
 """
 
+import html
+
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 import numpy as np
+
+
+def _esc(value):
+    """HTML-escape a dynamic value before interpolation into unsafe_allow_html blocks."""
+    return html.escape(str(value))
 
 def load_css(css_path):
     """Inject custom CSS stylesheet."""
@@ -23,8 +30,8 @@ def render_header(title="MedAdhere AI", subtitle="Medication Adherence Risk Anal
     """Render the top hero banner with healthcare branding and badges."""
     st.markdown(f"""
     <div class="app-header">
-        <h1>{title}</h1>
-        <p>{subtitle}</p>
+        <h1>{_esc(title)}</h1>
+        <p>{_esc(subtitle)}</p>
         <div class="header-badges">
             <span class="header-badge">🏥 Clinical Decision Support Prototype</span>
             <span class="header-badge">🌲 Tuned Random Forest Classifier</span>
@@ -160,14 +167,14 @@ def render_insights(patient_dict, probability):
     # Frequency factor
     freq = patient_dict.get('Medication_Frequency', 1)
     if freq >= 3:
-        factors.append(('negative', f'High Dosing Frequency ({freq}x daily)', 'Multi-dose daily schedules significantly increase friction and missed doses.'))
+        factors.append(('negative', f'High Dosing Frequency ({_esc(freq)}x daily)', 'Multi-dose daily schedules significantly increase friction and missed doses.'))
     elif freq == 1:
         factors.append(('positive', 'Once-Daily Regimen', 'Single daily dosing is strongly associated with sustained habit formation.'))
 
     # Missed doses factor
     missed = patient_dict.get('Previous_Missed_Doses', 0)
     if missed >= 3:
-        factors.append(('negative', f'Prior Missed Doses ({missed} in 30 days)', 'Past compliance pattern is the strongest predictive indicator of ongoing non-adherence.'))
+        factors.append(('negative', f'Prior Missed Doses ({_esc(missed)} in 30 days)', 'Past compliance pattern is the strongest predictive indicator of ongoing non-adherence.'))
     elif missed == 0:
         factors.append(('positive', 'Zero Reported Missed Doses', 'History of perfect recent compliance demonstrates stable routine.'))
 
@@ -181,7 +188,7 @@ def render_insights(patient_dict, probability):
     # Side effects
     se = patient_dict.get('Side_Effects', 'None')
     if se in ['Severe', 'Moderate']:
-        factors.append(('negative', f'{se} Side Effects', 'Adverse drug events are a primary psychological driver of intentional omission.'))
+        factors.append(('negative', f'{_esc(se)} Side Effects', 'Adverse drug events are a primary psychological driver of intentional omission.'))
     elif se == 'None':
         factors.append(('positive', 'No Reported Side Effects', 'Good drug tolerability supports long-term regimen continuation.'))
 
@@ -195,22 +202,22 @@ def render_insights(patient_dict, probability):
     # Routine consistency
     routine = patient_dict.get('Routine_Consistency', 5)
     if routine <= 3:
-        factors.append(('negative', f'Irregular Routine ({routine}/10)', 'Unpredictable lifestyle schedules make routine dosing difficult.'))
+        factors.append(('negative', f'Irregular Routine ({_esc(routine)}/10)', 'Unpredictable lifestyle schedules make routine dosing difficult.'))
     elif routine >= 8:
-        factors.append(('positive', f'Highly Structured Routine ({routine}/10)', 'Consistent daily habits strongly reinforce medication adherence.'))
+        factors.append(('positive', f'Highly Structured Routine ({_esc(routine)}/10)', 'Consistent daily habits strongly reinforce medication adherence.'))
 
     # Doctor communication
     doc = patient_dict.get('Doctor_Communication', 5)
     if doc >= 8:
-        factors.append(('positive', f'Strong Provider Communication ({doc}/10)', 'High trust and open dialogue with healthcare providers correlate with better compliance.'))
+        factors.append(('positive', f'Strong Provider Communication ({_esc(doc)}/10)', 'High trust and open dialogue with healthcare providers correlate with better compliance.'))
     elif doc <= 3:
-        factors.append(('neutral', f'Low Provider Communication ({doc}/10)', 'Limited communication may leave patient questions and concerns unaddressed.'))
+        factors.append(('neutral', f'Low Provider Communication ({_esc(doc)}/10)', 'Limited communication may leave patient questions and concerns unaddressed.'))
 
     # Render factor pills
     for tone, title, desc in factors:
         st.markdown(f"""
         <div style="margin-bottom: 0.6rem; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background: {'#fef2f2' if tone=='negative' else '#ecfdf5' if tone=='positive' else '#f8fafc'};">
-            <span class="factor-pill {tone}"><b>{'⚠️ Risk Factor' if tone=='negative' else '✅ Protective Factor' if tone=='positive' else 'ℹ️ Context Factor'}</b>: {title}</span>
+            <span class="factor-pill {tone}"><b>{'⚠️ Risk Factor' if tone=='negative' else '✅ Protective Factor' if tone=='positive' else 'ℹ️ Context Factor'}</b>: {_esc(title)}</span>
             <div style="font-size: 0.85rem; color: #475569; margin-top: 0.25rem;">{desc}</div>
         </div>
         """, unsafe_allow_html=True)

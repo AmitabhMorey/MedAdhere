@@ -1,6 +1,6 @@
 # Medication Adherence Analysis: Predicting Patient Medication Compliance Using Machine Learning
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.3+-orange.svg)](https://scikit-learn.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red.svg)](https://streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
@@ -124,7 +124,8 @@ cd medication-adherence-ml
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Install dependencies
+# Install dependencies (requires Python 3.11+; the pinned versions include
+# security floors clearing all known published CVEs — see VULNERABILITIES.md)
 pip install -r requirements.txt
 ```
 

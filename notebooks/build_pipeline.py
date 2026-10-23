@@ -525,4 +525,13 @@ with open(metadata_path, 'w') as f:
     json.dump(metadata, f, indent=4)
 print(f"Saved model metadata to: {metadata_path}")
 
+# 4. Regenerate SHA-256 checksums so the app's integrity verification
+#    matches the freshly exported artifacts (models are not byte-reproducible).
+import sys
+
+sys.path.insert(0, MODELS_DIR)
+import update_checksums
+
+update_checksums.main()
+
 print("=== PIPELINE EXECUTION COMPLETE ===")

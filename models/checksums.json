@@ -1,0 +1,13 @@
+{
+  "schema": 2,
+  "artifacts": {
+    "models/medication_adherence_model.pkl": {
+      "sha256": "fd79972257fdde68388502d637cd61e17836d05dc0e654e740743a5ca9743399",
+      "hmac": null
+    },
+    "models/preprocessing_pipeline.pkl": {
+      "sha256": "0f94ecae80993102d1b7847f9114ef278b244c4f51f6cb25b496596f1bc61b9c",
+      "hmac": null
+    }
+  }
+}
