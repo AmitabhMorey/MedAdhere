@@ -8,8 +8,10 @@ Run via:
     streamlit run app/app.py
 """
 
-import os
 import json
+import logging
+import os
+
 import joblib
 import pandas as pd
 import numpy as np
@@ -17,11 +19,14 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
+from integrity import verify_artifact_integrity
 from components import (
     load_css, render_header, render_kpi_cards, render_gauge_chart,
     render_result_banner, render_insights, render_disclaimer,
     DEMO_PATIENT_1_ADHERENT, DEMO_PATIENT_2_NON_ADHERENT
 )
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------
 # Page Configuration
@@ -39,6 +44,7 @@ st.set_page_config(
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 CSS_PATH = os.path.join(os.path.dirname(__file__), 'styles.css')
 MODEL_PATH = os.path.join(BASE_DIR, 'models', 'medication_adherence_model.pkl')
+CHECKSUMS_PATH = os.path.join(BASE_DIR, 'models', 'checksums.json')
 METADATA_PATH = os.path.join(BASE_DIR, 'models', 'model_metadata.json')
 RESULTS_PATH = os.path.join(BASE_DIR, 'reports', 'model_results.csv')
 DATA_RAW_PATH = os.path.join(BASE_DIR, 'data', 'raw', 'medication_adherence.csv')
@@ -51,9 +57,16 @@ load_css(CSS_PATH)
 # ---------------------------------------------------------
 @st.cache_resource
 def load_ml_pipeline():
-    """Load the serialized scikit-learn full pipeline."""
+    """Load the serialized scikit-learn full pipeline after integrity verification."""
     if not os.path.exists(MODEL_PATH):
-        st.error(f"Trained model not found at: {MODEL_PATH}. Please train the model first.")
+        st.error("Trained model not found. Please train the model first (see README).")
+        st.stop()
+    try:
+        verify_artifact_integrity(MODEL_PATH, BASE_DIR, CHECKSUMS_PATH)
+    except RuntimeError as e:
+        logger.error("Model artifact integrity check failed: %s", e)
+        st.error("Model artifact failed its integrity check. Load refused. "
+                 "See server logs for details.")
         st.stop()
     return joblib.load(MODEL_PATH)
 
@@ -223,7 +236,7 @@ if page == "📊 Dashboard":
         st.markdown(f"""
         <div class="med-card">
             <div class="med-card-header">🌲 Tuned Ensemble Pipeline</div>
-            <p><b>Selected Model:</b> {metadata.get('model_name', 'Random Forest Classifier') if metadata else 'Random Forest'}</p>
+            <p><b>Selected Model:</b> {html.escape(str(metadata.get('model_name', 'Random Forest Classifier'))) if metadata else 'Random Forest'}</p>
             <p><b>Target:</b> <code>Medication_Adherence</code> (Binary: 0 or 1)</p>
             <p><b>Primary Metric:</b> F1-Score (Balanced precision-recall tradeoff)</p>
             <p><b>Secondary Metric:</b> Recall (Non-adherent vulnerability capture)</p>
@@ -426,9 +439,12 @@ elif page == "🎯 Prediction":
             # Quick Insights Preview
             render_insights(patient_record, prob_adherent)
 
-        except Exception as e:
-            st.error(f"Prediction Pipeline Error: {e}")
-            st.exception(e)
+        except Exception:
+            # Log full details server-side; never expose stack traces or
+            # exception text to end users (information disclosure).
+            logger.exception("Prediction pipeline failure")
+            st.error("Prediction failed: the model could not process the submitted "
+                     "patient profile. Please verify the inputs and try again.")
             
     render_disclaimer()
 

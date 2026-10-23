@@ -1,4 +1,7 @@
 # Core Scientific & Data Libraries
+# NOTE: requires Python 3.11+ (see README). Version floors include security
+# pins for transitive dependencies with known CVE fixes; re-audit with:
+#   pip-audit -r requirements.txt
 pandas>=2.0.0
 numpy>=1.24.0
 scipy>=1.10.0
@@ -13,10 +16,23 @@ seaborn>=0.12.0
 plotly>=5.15.0
 
 # Web Application Dashboard
-streamlit>=1.30.0
+# 1.66.1 is the first streamlit that permits the pinned pillow security floor
+# (1.54.x-1.60.x cap pillow<13) and requires Python 3.11+.
+streamlit>=1.66.1
 
 # Notebook Execution & Quality Audits
 nbformat>=5.9.0
 nbclient>=0.8.0
 ipykernel>=6.25.0
-notebook>=7.0.0
+notebook>=7.6.3
+
+# ---- Security pins: minimum versions clearing all known published CVEs ----
+# (pip-audit / OSV, 70 advisories across 10 packages, audited 2026-06)
+pillow>=13.0.0             # 52 advisories (fix 12.1.1/12.2.0/12.3.0/13.0.0)
+requests>=2.33.0           # PYSEC-2026-2275
+urllib3>=2.8.0             # PYSEC-2026-141/-142 (<2.7.0), -4175/-4176/-4177 (<2.8.0)
+jupyter-server>=2.21.0     # PYSEC-2026-366 (<2.20.0), -4054 (<2.21.0)
+anyio>=4.14.2              # PYSEC-2026-4024/-4025
+bleach>=6.4.0              # GHSA-gj48-438w-jh9v, GHSA-8rfp-98v4-mmr6
+pyarrow>=23.0.1            # PYSEC-2026-113
+soupsieve>=2.9.0           # PYSEC-2026-4170/-4171
